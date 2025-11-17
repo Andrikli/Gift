@@ -9,11 +9,17 @@ public abstract class AbstractMenu {
     private final List<Command> items = new ArrayList<>();
     private final String title;
     private boolean running = true;
-
+    private boolean initialized = false;
     protected AbstractMenu(String title) {
         this.title = title;
-        build(items);
-        addBackOrExit(items);
+
+    }
+    private void initIfNeeded() {
+        if (!initialized) {
+            build(items);
+            addBackOrExit(items);
+            initialized = true;
+        }
     }
     protected boolean isRoot(){
         return false;
@@ -47,7 +53,10 @@ public abstract class AbstractMenu {
             });
         }
     }
-    public final void show(){
+    public final void show() {
+        // 👇 ТУТ, перед першим показом меню, будуємо його
+        initIfNeeded();
+
         running = true;
         while (running) {
             printHeader();
@@ -56,12 +65,11 @@ public abstract class AbstractMenu {
             int backIndex = items.size() - 1;
 
             if (choice == 0) {
-                // 0 → Назад/Вихід (останній елемент)
                 items.get(backIndex).execute();
                 continue;
             }
 
-            int idx = choice - 1;  // 1..N → 0..N-1
+            int idx = choice - 1;
             if (idx < 0 || idx >= backIndex) {
                 System.out.println("Невірний вибір. Спробуйте ще раз.\n");
                 continue;
@@ -77,13 +85,13 @@ public abstract class AbstractMenu {
     private void printItems() {
         int backIndex = items.size() - 1;
 
-
-        System.out.println("0) " + stripLeadingNumber(items.get(backIndex).name()));
-
         for (int i = 0; i < backIndex; i++) {
             String shown = stripLeadingNumber(items.get(i).name());
             System.out.printf("%d) %s%n", i + 1, shown);
         }
+        System.out.println("0) " + stripLeadingNumber(items.get(backIndex).name()));
+
+
         System.out.print("Ваш вибір: ");
     }
     private static String stripLeadingNumber(String s) {

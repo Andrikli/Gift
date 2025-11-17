@@ -1,4 +1,8 @@
 package repository;
+import model.Sweet;
+import java.util.List;
 
-public class SweetRepository {
+public interface SweetRepository {
+    void add(Sweet sweet);
+    List<Sweet> findAll();
 }

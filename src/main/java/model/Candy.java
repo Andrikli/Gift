@@ -12,7 +12,7 @@ public class Candy extends Sweet {
                 .withName(name)
                 .withWeightGram(weightGram)
                 .withSugarPercent(sugarPercent)
-                .withPrice(price)          // ← не priceUAH
+                .withPrice(price)
                 .withExpiryDate(expiryDate)
                 .withManufacturer(manufacturer)
                 .withCity(city);
