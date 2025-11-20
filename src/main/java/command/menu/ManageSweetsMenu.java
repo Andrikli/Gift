@@ -1,5 +1,6 @@
 package command.menu;
 import command.Command;
+import command.actions.EditSweetCommand;
 import command.actions.PrintCommand;
 import command.actions.AddSweetCommand;
 import service.SweetService;
@@ -21,7 +22,5 @@ public class ManageSweetsMenu extends AbstractMenu {
     @Override
     protected void build(List<Command> items) {
         items.add(new AddSweetCommand(category, sweetService , in));
-        items.add(new PrintCommand("Видалити","Успішно видалено", in));
-        items.add(new PrintCommand("Редагувати","Успішно редаговано", in));
     }
 }

@@ -1,10 +1,7 @@
 package command.menu;
 import command.Command;
-import command.actions.OpenMenuCommand;
-import command.actions.PrintCommand;
-import command.actions.ListAllSweetsCommand;
-import command.actions.FindSweetByIdCommand;
-import command.actions.DeleteSweetCommand;
+import command.actions.*;
+
 import java.util.List;
 import service.SweetService;
 
@@ -18,12 +15,14 @@ public class SweetsMenu extends AbstractMenu {
     protected void build(List<Command> items) {
         items.add(new ListAllSweetsCommand(sweetService));
         items.add(new OpenMenuCommand(
-                "Керування солодощами",
+                "Додати солодощі",
                 () -> new ChooseSweetsMenu(sweetService),
                 in
         ));
-        items.add(new PrintCommand("Редагувати", "Редагування у складі виконано", in));
+        items.add(new RestoreSweetCommand(sweetService, in));
         items.add(new DeleteSweetCommand(sweetService, in));
+        items.add(new DeleteAllSweetsCommand(sweetService, in));
         items.add(new FindSweetByIdCommand(sweetService, in));
+        items.add(new EditSweetCommand( sweetService, in));
     }
 }

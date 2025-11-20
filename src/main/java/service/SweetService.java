@@ -4,6 +4,7 @@ import model.*;
 import repository.SweetRepository;
 import java.util.List;
 
+
 public class SweetService {
     private final SweetRepository sweetRepository;
     public SweetService(SweetRepository sweetRepository) {
@@ -35,13 +36,96 @@ public class SweetService {
     }
     public boolean deleteById(int id) {
         Sweet sweet = sweetRepository.findById(id);
-        if (sweet == null) {
-            return false;
-        }
-        if (sweet.isDeleted()) {
+        if (sweet == null || sweet.isDeleted()) {
             return false;
         }
         sweet.markDeleted();
         return true;
+    }
+    public boolean restoreId(int id) {
+        Sweet sweet = sweetRepository.findById(id);
+        if (sweet == null|| !sweet.isDeleted()) {
+            return false;
+        }
+        sweet.restore();
+        return true;
+    }
+
+    public int deleteAll() {
+        int deletedCount = 0;
+        for (Sweet sweet : sweetRepository.findAll()) {
+           if (sweet.isDeleted()) {
+                sweet.markDeleted();
+               deletedCount++;
+           }
+        }
+        return deletedCount;
+    }
+
+    public boolean editSweet(int id,
+                             String name,
+                             double weight,
+                             double sugar,
+                             double price,
+                             String manufacturer,
+                             String city,
+                             Double cacaoPercent,
+                             String color,
+                             String flourType
+    ){
+        Sweet old = sweetRepository.findById(id);
+        if (old == null || old.isDeleted()) {
+            return false;
+        }
+        SweetCategory cat;
+        if (old instanceof Candy) {
+            cat = SweetCategory.CANDY;
+        } else if (old instanceof Cookie) {
+            cat = SweetCategory.COOKIE;
+        } else if (old instanceof Chocolate) {
+            cat = SweetCategory.CHOCOLATE;
+        } else {
+            throw new IllegalStateException("Unknown sweet type: " + old.getClass());
+        }
+
+        Sweet updated = switch (cat) {
+            case CANDY -> Candy.builder()
+                    .withId(id)
+                    .withName(name)
+                    .withWeightGram(weight)
+                    .withSugarPercent(sugar)
+                    .withPrice(price)
+                    .withExpiryDate(old.getExpiryDate())
+                    .withManufacturer(manufacturer)
+                    .withCity(city)
+                    .build();
+
+            case CHOCOLATE -> Chocolate.builder()
+                    .withId(id)
+                    .withName(name)
+                    .withWeightGram(weight)
+                    .withSugarPercent(sugar)
+                    .withPrice(price)
+                    .withExpiryDate(old.getExpiryDate())
+                    .withManufacturer(manufacturer)
+                    .withCity(city)
+                    .cacaoPercent(cacaoPercent)
+                    .color(color)
+                    .build();
+
+            case COOKIE -> Cookie.builder()
+                    .withId(id)
+                    .withName(name)
+                    .withWeightGram(weight)
+                    .withSugarPercent(sugar)
+                    .withPrice(price)
+                    .withExpiryDate(old.getExpiryDate())
+                    .withManufacturer(manufacturer)
+                    .withCity(city)
+                    .flourType(flourType)
+                    .build();
+        };
+
+        return sweetRepository.update(updated);
     }
 }

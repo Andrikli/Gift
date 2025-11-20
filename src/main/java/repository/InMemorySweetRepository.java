@@ -30,11 +30,6 @@ public class InMemorySweetRepository implements SweetRepository {
         sweets.add(withId);
         return withId;
     }
-    @Override
-    public void add(Sweet sweet) {
-        // щоб не плодити два різних способи, делегуємо в save
-        save(sweet);
-    }
 
     @Override
     public List<Sweet> findAll() {
@@ -44,11 +39,22 @@ public class InMemorySweetRepository implements SweetRepository {
     @Override
     public Sweet findById(int id) {
         for (Sweet s : sweets) {
-            if (!s.isDeleted() && s.getId() != null && s.getId() == id) {
+            if (s.getId() != null && s.getId() == id) {
                 return s;
             }
         }
         return null; // або Optional<Sweet>
+    }
+    @Override
+    public boolean update(Sweet updated){
+        for(int i=0;i<sweets.size();i++){
+            Sweet s = sweets.get(i);
+            if(s.getId() != null && s.getId().equals(updated.getId())){
+                sweets.set(i, updated);
+                return true;
+            }
+        }
+        return false;
     }
 }
 

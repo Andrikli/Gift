@@ -11,7 +11,7 @@ public abstract class Sweet {
     protected final LocalDate expiryDate;
     protected final String manufacturer;
     protected final String city;
-    private boolean deleted = false;
+    private boolean deleted ;
 
     protected Sweet(Builder<?> b) {
         this.id = b.id;
@@ -106,8 +106,14 @@ public abstract class Sweet {
     public boolean isDeleted() {
         return deleted;
     }
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
     public void markDeleted(){
         this.deleted = true;
+    }
+    public void restore(){
+        this.deleted = false;
     }
 
 

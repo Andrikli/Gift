@@ -19,7 +19,7 @@ public class AddSweetCommand implements Command {
     }
     @Override
     public String name() {
-        return "Add Sweet"+ switch (category){
+        return "Додати "+ switch (category){
             case CANDY -> "цукерки";
             case CHOCOLATE ->"шоколад";
             case COOKIE ->"печиво";
