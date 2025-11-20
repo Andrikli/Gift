@@ -3,7 +3,7 @@ package model;
 import java.time.LocalDate;
 
 public abstract class Sweet {
-    protected final int id;
+    protected final Integer id;
     protected final String name;
     protected final double weightGram;
     protected final double sugarPercent;
@@ -11,6 +11,7 @@ public abstract class Sweet {
     protected final LocalDate expiryDate;
     protected final String manufacturer;
     protected final String city;
+    private boolean deleted = false;
 
     protected Sweet(Builder<?> b) {
         this.id = b.id;
@@ -26,7 +27,7 @@ public abstract class Sweet {
     public abstract Builder<?> toBuilder();
 
     public static abstract class Builder<T extends Builder<T>>{
-        protected int id;
+        protected Integer id = null;
         protected String name;
         protected double weightGram;
         protected double sugarPercent;
@@ -34,7 +35,7 @@ public abstract class Sweet {
         protected LocalDate expiryDate;
         protected String manufacturer;
         protected String city;
-        public T withId(int id){
+        public T withId(Integer id){
             this.id = id;
             return self();
         }
@@ -72,7 +73,7 @@ public abstract class Sweet {
 
 
     }
-    public int getId() {
+    public Integer getId() {
         return id;
     }
     public String getName() {
@@ -96,10 +97,17 @@ public abstract class Sweet {
     public String getCity() {
         return city;
     }
+
     @Override
     public String toString() {
         return String.format("Sweet{id=%d, name=%s, weight=%.2f, sugar=%.2f, price=%.2f, expiry=%s, mfr=%s, city=%s}",
                 id, name, weightGram, sugarPercent, price, expiryDate, manufacturer, city);
+    }
+    public boolean isDeleted() {
+        return deleted;
+    }
+    public void markDeleted(){
+        this.deleted = true;
     }
 
 
