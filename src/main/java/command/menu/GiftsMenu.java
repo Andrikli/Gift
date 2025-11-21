@@ -1,20 +1,31 @@
 package command.menu;
 
 import command.Command;
+import command.actions.Gift.*;
 import command.actions.PrintCommand;
+import service.GiftService;
 import java.util.List;
+import java.util.Scanner;
 
 public class GiftsMenu extends AbstractMenu {
-    public GiftsMenu() { super("Керування подарунками"); }
+    private final GiftService giftService;
+    private final Scanner in;
+
+    public GiftsMenu(GiftService giftService, Scanner in) {
+        super("Керування подарунками");
+        this.giftService = giftService;
+        this.in = in;
+    }
 
     @Override
     protected void build(List<Command> items) {
-        items.add(new PrintCommand("Створити", "Створення подарунка", in));
-        items.add(new PrintCommand("Обрати поточний", "Поточний подарунок обрано", in));
-        items.add(new PrintCommand("Видалити", "Подарунок видалено", in));
-        items.add(new PrintCommand("Список подарунків", "Список подарунків показано", in));
-        items.add(new PrintCommand("Пошук подарунка", "Пошук здійснено", in));
-        items.add(new PrintCommand("Редагувати назву", "Змінено назву", in));
-        items.add(new PrintCommand("Відновити подарунок", "Успігно відновлено", in));
+        items.add(new ListGiftsCommand(giftService));
+        items.add(new RestoreGiftCommand(giftService, in));
+        items.add(new SetCurrentGiftCommand(giftService, in));
+        items.add(new DeleteGiftCommand(giftService, in));
+        items.add(new CreateGiftCommand(giftService, in));
+        items.add(new SearchGiftCommand(giftService, in));
+        items.add(new EditTitleCommand(giftService, in));
+
     }
 }

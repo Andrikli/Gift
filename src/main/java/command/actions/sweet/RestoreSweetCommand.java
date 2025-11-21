@@ -1,6 +1,5 @@
-package command.actions;
+package command.actions.sweet;
 import command.Command;
-import repository.SweetRepository;
 import service.SweetService;
 
 import java.util.Scanner;

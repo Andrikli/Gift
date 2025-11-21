@@ -8,7 +8,9 @@ public abstract class Sweet {
     protected final double weightGram;
     protected final double sugarPercent;
     protected final double price;
-    protected final LocalDate expiryDate;
+    private final LocalDate manufactureDate;
+    private final int expiryDays;
+    private final LocalDate disposeDate;
     protected final String manufacturer;
     protected final String city;
     private boolean deleted ;
@@ -19,7 +21,9 @@ public abstract class Sweet {
         this.weightGram = b.weightGram;
         this.sugarPercent = b.sugarPercent;
         this.price = b.price;
-        this.expiryDate = b.expiryDate;
+        this.manufactureDate = b.manufactureDate;
+        this.expiryDays = b.expiryDays;
+        this.disposeDate = b.disposeDate;
         this.manufacturer = b.manufacturer;
         this.city = b.city;
     }
@@ -32,9 +36,12 @@ public abstract class Sweet {
         protected double weightGram;
         protected double sugarPercent;
         protected double price;
-        protected LocalDate expiryDate;
+        protected LocalDate manufactureDate;
+        protected int expiryDays;
+        protected LocalDate disposeDate;
         protected String manufacturer;
         protected String city;
+
         public T withId(Integer id){
             this.id = id;
             return self();
@@ -55,10 +62,21 @@ public abstract class Sweet {
             this.price = price;
             return self();
         }
-        public T withExpiryDate(LocalDate expiryDate){
-            this.expiryDate = expiryDate;
+        public T withManufactureDate(LocalDate manufactureDate) {
+            this.manufactureDate = manufactureDate;
             return self();
         }
+
+        public T withExpiryDays(int expiryDays) {
+            this.expiryDays = expiryDays;
+            return self();
+        }
+
+        public T withDisposeDate(LocalDate disposeDate) {
+            this.disposeDate = disposeDate;
+            return self();
+        }
+
         public T withManufacturer(String manufacturer){
             this.manufacturer = manufacturer;
             return self();
@@ -88,8 +106,16 @@ public abstract class Sweet {
     public double getPrice() {
         return price;
     }
-    public LocalDate getExpiryDate() {
-        return expiryDate;
+    public LocalDate getManufactureDate() {
+        return manufactureDate;
+    }
+
+    public int getExpiryDays() {
+        return expiryDays;
+    }
+
+    public LocalDate getDisposeDate() {
+        return disposeDate;
     }
     public String getManufacturer() {
         return manufacturer;
@@ -100,8 +126,11 @@ public abstract class Sweet {
 
     @Override
     public String toString() {
-        return String.format("Sweet{id=%d, name=%s, weight=%.2f, sugar=%.2f, price=%.2f, expiry=%s, mfr=%s, city=%s}",
-                id, name, weightGram, sugarPercent, price, expiryDate, manufacturer, city);
+        return String.format(
+                "Sweet{id=%d, name=%s, weight=%.2f, sugar=%.2f, price=%.2f, mDate=%s, expiryDays=%d, disposeDate=%s, mfr=%s, city=%s}",
+                id, name, weightGram, sugarPercent, price,
+                manufactureDate, expiryDays, disposeDate, manufacturer, city
+        );
     }
     public boolean isDeleted() {
         return deleted;
@@ -114,6 +143,10 @@ public abstract class Sweet {
     }
     public void restore(){
         this.deleted = false;
+    }
+    public boolean isExpired() {
+        LocalDate expiryDate = manufactureDate.plusDays(expiryDays);
+        return expiryDate.isBefore(disposeDate);
     }
 
 

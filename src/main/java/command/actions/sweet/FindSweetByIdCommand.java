@@ -1,4 +1,4 @@
-package command.actions;
+package command.actions.sweet;
 
 import command.Command;
 import model.Sweet;

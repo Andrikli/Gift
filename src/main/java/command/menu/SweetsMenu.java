@@ -3,6 +3,8 @@ import command.Command;
 import command.actions.*;
 
 import java.util.List;
+
+import command.actions.sweet.*;
 import service.SweetService;
 
 public class SweetsMenu extends AbstractMenu {

@@ -1,8 +1,6 @@
 package command.menu;
 import command.Command;
-import command.actions.EditSweetCommand;
-import command.actions.PrintCommand;
-import command.actions.AddSweetCommand;
+import command.actions.sweet.AddSweetCommand;
 import service.SweetService;
 import java.util.List;
 import model.SweetCategory;

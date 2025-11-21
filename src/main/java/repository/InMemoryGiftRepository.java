@@ -36,12 +36,14 @@ public class InMemoryGiftRepository implements GiftRepository {
     @Override
     public boolean update(Gift updated) {
         for(int i=0;i<gifts.size();i++){
-            Gift gift = gifts.get(i);
-            if(gift.getId()!= 0 && gift.getId().equels(updated.getId())){
+
+            if(gifts.get(i).getId()!= 0 && gifts.get(i).getId() == updated.getId()){
                 gifts.set(i,updated);
                 return true;
             }
         }
         return false;
     }
+
+
 }

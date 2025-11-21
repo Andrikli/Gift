@@ -1,8 +1,8 @@
-package command.actions;
+package command.actions.sweet;
 import command.Command;
 import model.Sweet;
 import service.SweetService;
-import repository.*;
+
 import java.util.List;
 
 public class ListAllSweetsCommand implements Command{

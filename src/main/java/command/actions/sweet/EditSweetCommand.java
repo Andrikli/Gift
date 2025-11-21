@@ -1,13 +1,19 @@
-package command.actions;
-import command.actions.*;
+package command.actions.sweet;
+
 import command.Command;
 import model.*;
 import service.SweetService;
-import java.util.List;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
 public class EditSweetCommand implements Command {
+
     private final SweetService sweetService;
     private final Scanner in;
+    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public EditSweetCommand(SweetService sweetService, Scanner in) {
         this.sweetService = sweetService;
@@ -19,8 +25,21 @@ public class EditSweetCommand implements Command {
         return "Редагувати солодощі";
     }
 
+    private LocalDate readDate(String msg) {
+        System.out.println(msg);
+        while (true) {
+            String line = in.nextLine().trim();
+            try {
+                return LocalDate.parse(line, FMT);
+            } catch (DateTimeParseException e) {
+                System.out.println("Некоректна дата. Формат dd.MM.yyyy. Спробуйте ще раз:");
+            }
+        }
+    }
+
     @Override
     public void execute() {
+
         System.out.print("Введіть ID солодощів: ");
         int id = Integer.parseInt(in.nextLine().trim());
 
@@ -31,15 +50,10 @@ public class EditSweetCommand implements Command {
         }
 
         SweetCategory cat;
-        if (old instanceof Candy) {
-            cat = SweetCategory.CANDY;
-        } else if (old instanceof Cookie) {
-            cat = SweetCategory.COOKIE;
-        } else if (old instanceof Chocolate) {
-            cat = SweetCategory.CHOCOLATE;
-        } else {
-            throw new IllegalStateException("Unknown sweet type: " + old.getClass());
-        }
+        if (old instanceof Candy) cat = SweetCategory.CANDY;
+        else if (old instanceof Cookie) cat = SweetCategory.COOKIE;
+        else if (old instanceof Chocolate) cat = SweetCategory.CHOCOLATE;
+        else throw new IllegalStateException("Unknown sweet type: " + old.getClass());
 
         System.out.println("Введіть назву:");
         String name = in.nextLine();
@@ -52,6 +66,13 @@ public class EditSweetCommand implements Command {
 
         System.out.println("Введіть ціну:");
         double price = Double.parseDouble(in.nextLine().trim());
+
+        LocalDate manufacture = readDate("Введіть дату виготовлення (dd.MM.yyyy):");
+
+        System.out.println("Введіть термін придатності (днів):");
+        int expiryDays = Integer.parseInt(in.nextLine().trim());
+
+        LocalDate dispose = readDate("Введіть дату списання (dd.MM.yyyy):");
 
         System.out.println("Введіть виробника:");
         String manufacturer = in.nextLine();
@@ -75,11 +96,16 @@ public class EditSweetCommand implements Command {
             flour = in.nextLine();
         }
 
-        boolean ok = sweetService.editSweet(id, name, weight, sugar, price, manufacturer, city, cacao, color, flour);
+        boolean ok = sweetService.editSweet(
+                id, name, weight, sugar, price,
+                manufacture, expiryDays, dispose,
+                manufacturer, city,
+                cacao, color, flour
+        );
 
         if (ok)
-            System.out.println(" Солодощі успішно змінено.");
+            System.out.println("Солодощі успішно змінено.");
         else
-            System.out.println(" Помилка редагування.");
+            System.out.println("Помилка редагування.");
     }
 }

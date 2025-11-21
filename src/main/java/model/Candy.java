@@ -13,7 +13,9 @@ public class Candy extends Sweet {
                 .withWeightGram(weightGram)
                 .withSugarPercent(sugarPercent)
                 .withPrice(price)
-                .withExpiryDate(expiryDate)
+                .withManufactureDate(getManufactureDate())
+                .withExpiryDays(getExpiryDays())
+                .withDisposeDate(getDisposeDate())
                 .withManufacturer(manufacturer)
                 .withCity(city);
     }

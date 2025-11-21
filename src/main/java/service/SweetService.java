@@ -3,12 +3,12 @@ package service;
 import model.*;
 import repository.SweetRepository;
 import java.util.List;
-
+import java.time.LocalDate;
+import java.util.List;
 
 public class SweetService {
     private final SweetRepository sweetRepository;
     public SweetService(SweetRepository sweetRepository) {
-
         this.sweetRepository = sweetRepository;
     }
 
@@ -54,7 +54,7 @@ public class SweetService {
     public int deleteAll() {
         int deletedCount = 0;
         for (Sweet sweet : sweetRepository.findAll()) {
-           if (sweet.isDeleted()) {
+           if (!sweet.isDeleted()) {
                 sweet.markDeleted();
                deletedCount++;
            }
@@ -67,6 +67,9 @@ public class SweetService {
                              double weight,
                              double sugar,
                              double price,
+                             LocalDate manufactureDate,
+                             int expiryDays,
+                             LocalDate disposeDate,
                              String manufacturer,
                              String city,
                              Double cacaoPercent,
@@ -87,7 +90,6 @@ public class SweetService {
         } else {
             throw new IllegalStateException("Unknown sweet type: " + old.getClass());
         }
-
         Sweet updated = switch (cat) {
             case CANDY -> Candy.builder()
                     .withId(id)
@@ -95,7 +97,9 @@ public class SweetService {
                     .withWeightGram(weight)
                     .withSugarPercent(sugar)
                     .withPrice(price)
-                    .withExpiryDate(old.getExpiryDate())
+                    .withManufactureDate(manufactureDate)
+                    .withExpiryDays(expiryDays)
+                    .withDisposeDate(disposeDate)
                     .withManufacturer(manufacturer)
                     .withCity(city)
                     .build();
@@ -106,7 +110,9 @@ public class SweetService {
                     .withWeightGram(weight)
                     .withSugarPercent(sugar)
                     .withPrice(price)
-                    .withExpiryDate(old.getExpiryDate())
+                    .withManufactureDate(manufactureDate)
+                    .withExpiryDays(expiryDays)
+                    .withDisposeDate(disposeDate)
                     .withManufacturer(manufacturer)
                     .withCity(city)
                     .cacaoPercent(cacaoPercent)
@@ -119,7 +125,9 @@ public class SweetService {
                     .withWeightGram(weight)
                     .withSugarPercent(sugar)
                     .withPrice(price)
-                    .withExpiryDate(old.getExpiryDate())
+                    .withManufactureDate(manufactureDate)
+                    .withExpiryDays(expiryDays)
+                    .withDisposeDate(disposeDate)
                     .withManufacturer(manufacturer)
                     .withCity(city)
                     .flourType(flourType)
@@ -128,4 +136,15 @@ public class SweetService {
 
         return sweetRepository.update(updated);
     }
+    public int removeExpiredSweets() {
+        int count = 0;
+        for (Sweet sweet : sweetRepository.findAll()) {
+            if (!sweet.isDeleted() && sweet.isExpired()) {
+                sweet.markDeleted();
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

@@ -30,8 +30,10 @@ public class Chocolate extends Sweet {
                 .withName(name)
                 .withWeightGram(weightGram)
                 .withSugarPercent(sugarPercent)
-                .withPrice(price)          // ← не priceUAH
-                .withExpiryDate(expiryDate)
+                .withPrice(price)
+                .withManufactureDate(getManufactureDate())
+                .withExpiryDays(getExpiryDays())
+                .withDisposeDate(getDisposeDate())
                 .withManufacturer(manufacturer)
                 .withCity(city)
                 .cacaoPercent(cacaoPercent)

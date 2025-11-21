@@ -7,11 +7,13 @@ public class Gift {
     private final int id;
     private final String title;
     private List<Integer> sweetIds = new ArrayList<>();
+    private final boolean deleted;
 
     private Gift(Builder b) {
         this.id = b.id;
         this.title = b.title;
         this.sweetIds = List.copyOf(b.sweetIds);
+        this.deleted = b.deleted;
     }
     public int getId() {
         return id;
@@ -21,17 +23,21 @@ public class Gift {
     }
     public List<Integer> getSweetIds() {
         return sweetIds;
+    } public boolean isDeleted() {
+        return deleted;
     }
     public Builder toBuilder() {
         return new Builder()
                 .id(id)
                 .title(title)
-                .addAllSweetIds(sweetIds);
+                .addAllSweetIds(sweetIds)
+                .deleted(deleted);
     }
     public static class Builder {
         private int id;
         private String title;
         private List<Integer> sweetIds = new ArrayList<>();
+        private boolean deleted=false;
 
         public Builder id(int id) {
             this.id = id;
@@ -54,6 +60,11 @@ public class Gift {
         }
         public Builder addAllSweetIds(List<Integer> ids) {
             this.sweetIds.addAll(ids);
+            return this;
+        }
+
+        public Builder deleted(boolean deleted) {
+            this.deleted = deleted;
             return this;
         }
 
