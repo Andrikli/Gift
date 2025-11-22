@@ -27,6 +27,7 @@ public class ListAllSweetsCommand implements Command{
         System.out.println("Sweets found");
         for(Sweet s: all){
             System.out.println(s);
+            System.out.println();
         }
     }
 }

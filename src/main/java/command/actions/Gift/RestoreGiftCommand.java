@@ -1,5 +1,4 @@
 package command.actions.Gift;
-import model.Gift;
 import service.GiftService;
 import command.Command;
 import java.util.Scanner;

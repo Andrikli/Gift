@@ -81,6 +81,6 @@ public class Gift {
 
     @Override
     public String toString() {
-        return "Gift{id=" + id + ", title='" + title + "', sweetIds=" + sweetIds + "}";
+        return "Подарунок: id=" + id + ", Назва='" + title + "', id солодощів=" + sweetIds + "}";
     }
 }

@@ -21,9 +21,7 @@ public class GiftsMenu extends AbstractMenu {
     protected void build(List<Command> items) {
         items.add(new ListGiftsCommand(giftService));
         items.add(new RestoreGiftCommand(giftService, in));
-        items.add(new SetCurrentGiftCommand(giftService, in));
         items.add(new DeleteGiftCommand(giftService, in));
-        items.add(new CreateGiftCommand(giftService, in));
         items.add(new SearchGiftCommand(giftService, in));
         items.add(new EditTitleCommand(giftService, in));
 

@@ -146,5 +146,7 @@ public class SweetService {
         }
         return count;
     }
-
+    public List<Sweet> getAllIncludingDeleted() {
+        return sweetRepository.findAll();
+    }
 }

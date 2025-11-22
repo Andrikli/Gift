@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 
 public class GiftService {
+
     private final GiftRepository giftRepository;
     private final SweetService sweetService;
-
     private Integer currentGiftId = null;
 
     public GiftService(GiftRepository giftRepository, SweetService sweetService) {
@@ -84,7 +84,7 @@ public class GiftService {
         List<Sweet> result = new ArrayList<>();
         for (Integer sweetId : gift.getSweetIds()) {
             Sweet sweet = sweetService.findById(sweetId);
-            if (sweet == null&& !sweet.isDeleted()) {
+            if (sweet != null&& !sweet.isDeleted()) {
                 result.add(sweet);
             }
         }
@@ -202,5 +202,10 @@ public class GiftService {
         giftRepository.update(updated);
         return removed;
     }
-
+    public void saveLoadedGift(Gift gift) {
+        giftRepository.save(gift);
+    }
+    public List<Gift> getAllIncludingDeleted() {
+        return giftRepository.findAll();
+    }
 }

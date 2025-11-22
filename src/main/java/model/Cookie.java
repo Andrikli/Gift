@@ -47,7 +47,7 @@ public class Cookie extends Sweet {
         }
         @Override
         public String toString() {
-            return "Cookie.Builder(flourType=" + flourType + ")";
+            return "Cookie.Builder(тип муки=" + flourType + ")";
         }
 
     }

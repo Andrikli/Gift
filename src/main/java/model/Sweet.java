@@ -1,5 +1,7 @@
 package model;
 
+import repository.SweetRepository;
+
 import java.time.LocalDate;
 
 public abstract class Sweet {
@@ -41,6 +43,7 @@ public abstract class Sweet {
         protected LocalDate disposeDate;
         protected String manufacturer;
         protected String city;
+        protected boolean deleted = false;
 
         public T withId(Integer id){
             this.id = id;
@@ -85,6 +88,10 @@ public abstract class Sweet {
             this.city = city;
             return self();
         }
+        public T withDeleted(boolean deleted){
+            this.deleted = deleted;
+            return self();
+        }
         protected abstract T self();
         public abstract Sweet build();
 
@@ -127,7 +134,7 @@ public abstract class Sweet {
     @Override
     public String toString() {
         return String.format(
-                "Sweet{id=%d, name=%s, weight=%.2f, sugar=%.2f, price=%.2f, mDate=%s, expiryDays=%d, disposeDate=%s, mfr=%s, city=%s}",
+                "Солодощі : id=%d, назва=%s, вага=%.2f, цукор=%.2f, ціна=%.2f, дата виготовдення=%s, термін придатності=%d, дата вжитку=%s, виробник=%s, місто=%s}",
                 id, name, weightGram, sugarPercent, price,
                 manufactureDate, expiryDays, disposeDate, manufacturer, city
         );

@@ -61,7 +61,7 @@ public class Chocolate extends Sweet {
         @Override
         public String toString() {
             return super.toString() +
-                    String.format(", cacao=%.1f%%, color=%s", cacaoPercent, color);
+                    String.format(", какао=%.1f%%, колір=%s", cacaoPercent, color);
         }
     }
 

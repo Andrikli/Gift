@@ -1,11 +1,8 @@
 package command.actions.Gift;
-
 import command.Command;
 import model.Gift;
 import service.GiftService;
-
 import java.util.List;
-
 public class ListGiftsCommand implements Command {
     private final GiftService giftService;
 

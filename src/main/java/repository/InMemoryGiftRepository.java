@@ -19,7 +19,7 @@ public class InMemoryGiftRepository implements GiftRepository {
             gifts.add(gift);
             return gift;
         }
-        Gift withId = gift.toBuilder().build();
+        Gift withId = gift.toBuilder().id(nextId++).build();
         gifts.add(withId);
         return withId;
 
@@ -37,7 +37,7 @@ public class InMemoryGiftRepository implements GiftRepository {
     public boolean update(Gift updated) {
         for(int i=0;i<gifts.size();i++){
 
-            if(gifts.get(i).getId()!= 0 && gifts.get(i).getId() == updated.getId()){
+            if(gifts.get(i).getId() == updated.getId()){
                 gifts.set(i,updated);
                 return true;
             }

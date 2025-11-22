@@ -23,12 +23,12 @@ public class CurrentGiftMenu extends AbstractMenu {
         items.add(new AddSweetToGiftCommand(giftService, in));// додати за id
         items.add(new DeleteFromGiftCommand(giftService, in));
         // відновити солодощі в подарунку
-        items.add(new PrintCommand("Сортувати", "Сортування виконано", in));
-        items.add(new PrintCommand("Фільтрувати", "Фільтрація виконана", in));
+        //items.add(new PrintCommand("Сортувати", "Сортування виконано", in));
+        //items.add(new PrintCommand("Фільтрувати", "Фільтрація виконана", in));
         items.add(new ShowCurrentGiftTotalsCommand(giftService));
         items.add(new ClearGiftCommand(giftService));
-        items.add(new PrintCommand("Очистити подарунок(Видалити прострочені)", "Видалено прострочені солодощі", in));
-        items.add(new PrintCommand("Зібрати за вагою/бюджетом", "успішно зібрано", in));
+
+        //items.add(new PrintCommand("Зібрати за вагою/бюджетом", "успішно зібрано", in));
 
 
     }

@@ -1,7 +1,6 @@
 package command.actions.Gift;
 import command.Command;
 import service.GiftService;
-
 import java.util.Scanner;
 
 public class EditTitleCommand implements Command {

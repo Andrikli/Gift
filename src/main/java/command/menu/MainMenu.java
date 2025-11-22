@@ -1,4 +1,6 @@
 package command.menu;
+import command.actions.Gift.CreateGiftCommand;
+import command.actions.Gift.SetCurrentGiftCommand;
 import command.actions.OpenMenuCommand;
 import command.Command;
 import service.GiftService;
@@ -18,10 +20,13 @@ public class MainMenu extends AbstractMenu {
     }
     @Override
     protected void build(List<Command> items) {
-        items.add(new OpenMenuCommand("Файли", FileMenu::new, in));
+        items.add(new OpenMenuCommand("Файли", ()-> new FileMenu(sweetService, giftService),
+                in));
         items.add(new OpenMenuCommand("Cклад солодощів", () -> new SweetsMenu(sweetService),
                 in
         ));
+        items.add(new CreateGiftCommand(giftService, in));
+        items.add(new SetCurrentGiftCommand(giftService, in));
         items.add(new OpenMenuCommand(
                 "Поточний подарунок",
                 () -> new CurrentGiftMenu(giftService, in),

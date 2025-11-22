@@ -6,7 +6,7 @@ import repository.InMemorySweetRepository;
 import repository.SweetRepository;
 import service.SweetService;
 import service.GiftService;
-import repository.GiftRepository;
+
 
 
 public class Main {
@@ -17,8 +17,8 @@ public class Main {
         SweetService sweetService = new SweetService(sweetRepository);
         GiftService giftService = new GiftService(giftRepository, sweetService);
 
-        MainMenu menu = new MainMenu(sweetService, giftService);
-        menu.show();
+        MainMenu mainMenu = new MainMenu(sweetService, giftService);
+        mainMenu.show();
 
         System.out.println("Вихід з програми");
     }

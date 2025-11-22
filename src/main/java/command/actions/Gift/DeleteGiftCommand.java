@@ -1,5 +1,4 @@
 package command.actions.Gift;
-
 import model.Gift;
 import service.GiftService;
 import command.Command;
@@ -17,20 +16,20 @@ public class DeleteGiftCommand implements Command {
     @Override
     public String name(){
 
-        return "Видалити солодощі за ID";
+        return "Видалити подарунок";
     }
     @Override
     public void execute() {
         List<Gift> gifts = giftService.getAll();
         if(gifts.isEmpty()){
-            System.out.println("Склад порожній, немає що видаляти");
+            System.out.println("Список порожній, немає що видаляти");
             return;
 
         }
         for (Gift gift : gifts){
             System.out.println(gift);
         }
-        System.out.println("Введіть id солодощів для видалення");
+        System.out.println("Введіть id подарунка для видалення");
         String line = in.nextLine().trim();
         int id;
         try {
@@ -42,9 +41,9 @@ public class DeleteGiftCommand implements Command {
 
         boolean result = giftService.deleteById(id);
         if(!result){
-            System.out.println("Не вдалося видалити: або солодощів з таким Id не було");
+            System.out.println("Не вдалося видалити: або подарунок з таким Id не було");
         }else{
-            System.out.println("Солодощі успішно видалено");
+            System.out.println("Подарунок успішно видалено");
         }
 
     }
