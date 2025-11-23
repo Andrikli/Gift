@@ -2,6 +2,8 @@ package command.actions.sweet;
 import command.Command;
 import model.Sweet;
 import service.SweetService;
+import util.SweetUtils;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,7 +27,7 @@ public class DeleteSweetCommand implements Command {
 
         }
         for (Sweet sweet : sweets){
-            System.out.println(sweet);
+            System.out.println(SweetUtils.format(sweet));
         }
         System.out.println("Введіть id солодощів для видалення");
         String line = in.nextLine().trim();

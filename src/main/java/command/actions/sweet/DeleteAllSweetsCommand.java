@@ -16,7 +16,7 @@ public class DeleteAllSweetsCommand implements Command{
     }
     @Override
     public void execute(){
-        System.out.println("УВАГА: всі солодощі будуть позначені як видалені.");
+        System.out.println("УВАГА: всі солодощі будуть видалені.");
         System.out.print("Ви впевнені? (y/n): ");
         String answer = in.nextLine().trim().toLowerCase();
         if (!answer.equals("y")&&!answer.equals("так")) {

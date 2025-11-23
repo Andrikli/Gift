@@ -134,7 +134,7 @@ public abstract class Sweet {
     @Override
     public String toString() {
         return String.format(
-                "Солодощі : id=%d, назва=%s, вага=%.2f, цукор=%.2f, ціна=%.2f, дата виготовдення=%s, термін придатності=%d, дата вжитку=%s, виробник=%s, місто=%s}",
+                "id=%d, назва=%s, вага=%.2f, цукор=%.2f, ціна=%.2f, дата виготовдення=%s, термін придатності=%d, дата вжитку=%s, виробник=%s, місто=%s}",
                 id, name, weightGram, sugarPercent, price,
                 manufactureDate, expiryDays, disposeDate, manufacturer, city
         );
@@ -151,10 +151,15 @@ public abstract class Sweet {
     public void restore(){
         this.deleted = false;
     }
+
     public boolean isExpired() {
         LocalDate expiryDate = manufactureDate.plusDays(expiryDays);
         return expiryDate.isBefore(disposeDate);
     }
+    public LocalDate getExpiryDate() {
+        return manufactureDate.plusDays(expiryDays);
+    }
+
 
 
 }

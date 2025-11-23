@@ -3,6 +3,7 @@ package command.menu;
 import command.Command;
 import command.actions.Gift.*;
 import command.actions.PrintCommand;
+import command.actions.sweet.SortSweetsCommand;
 import service.GiftService;
 import java.util.List;
 import java.util.Scanner;
@@ -20,6 +21,7 @@ public class GiftsMenu extends AbstractMenu {
     @Override
     protected void build(List<Command> items) {
         items.add(new ListGiftsCommand(giftService));
+
         items.add(new RestoreGiftCommand(giftService, in));
         items.add(new DeleteGiftCommand(giftService, in));
         items.add(new SearchGiftCommand(giftService, in));

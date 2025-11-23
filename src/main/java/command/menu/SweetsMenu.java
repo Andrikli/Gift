@@ -21,10 +21,11 @@ public class SweetsMenu extends AbstractMenu {
                 () -> new ChooseSweetsMenu(sweetService),
                 in
         ));
+        items.add(new SortSweetsCommand(sweetService, in));
         items.add(new RestoreSweetCommand(sweetService, in));
         items.add(new DeleteSweetCommand(sweetService, in));
         items.add(new DeleteAllSweetsCommand(sweetService, in));
-        items.add(new FindSweetByIdCommand(sweetService, in));
+        items.add(new SearchInStockCommand(sweetService, in));
         items.add(new EditSweetCommand( sweetService, in));
     }
 }

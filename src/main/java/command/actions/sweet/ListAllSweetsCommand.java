@@ -4,7 +4,7 @@ import model.Sweet;
 import service.SweetService;
 
 import java.util.List;
-
+import util.SweetUtils;
 public class ListAllSweetsCommand implements Command{
     private final SweetService sweetService;
 
@@ -25,9 +25,9 @@ public class ListAllSweetsCommand implements Command{
         }
 
         System.out.println("Sweets found");
-        for(Sweet s: all){
-            System.out.println(s);
-            System.out.println();
+        for (Sweet s : sweetService.getAll()) {
+            System.out.println(SweetUtils.format(s));
+            System.out.println(); // пустий рядок
         }
     }
 }

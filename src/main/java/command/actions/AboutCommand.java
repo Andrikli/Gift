@@ -20,7 +20,7 @@ import command.Command;
             System.out.println("• Відновлювати видалені елементи");
             System.out.println("• Зберігати та завантажувати дані у файли");
             System.out.println();
-            System.out.println("Розробник: Andriy Ilkiv");
+            System.out.println("Розробник: Андрій Ільків");
             System.out.println("=====================");
         }
     }

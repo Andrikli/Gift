@@ -4,8 +4,7 @@ import model.*;
 import repository.SweetRepository;
 import java.util.List;
 import java.time.LocalDate;
-import java.util.List;
-
+import java.util.ArrayList;
 public class SweetService {
     private final SweetRepository sweetRepository;
     public SweetService(SweetRepository sweetRepository) {
@@ -148,5 +147,83 @@ public class SweetService {
     }
     public List<Sweet> getAllIncludingDeleted() {
         return sweetRepository.findAll();
+    }
+    public List<Sweet> sortStock(SortKey key,
+                                 SortOrder order,
+                                 SweetCategory filterCategory){
+        List<Sweet> all = sweetRepository.findAll();
+        return SweetSort.sort(all, key, order, filterCategory);
+    }
+    public List<Sweet> searchBySugarInList(List<Integer> ids, double minSugar, double maxSugar) {
+        List<Sweet> result = new ArrayList<>();
+
+        for (Integer id : ids) {
+            Sweet s = findById(id);
+            if (s == null || s.isDeleted()) continue;
+
+            double sugar = s.getSugarPercent();
+            if (sugar >= minSugar && sugar <= maxSugar) {
+                result.add(s);
+            }
+        }
+
+        return result;
+    }
+
+    public List<Sweet> searchInStorageBySugar(double minSugar, double maxSugar) {
+        return sweetRepository.findAll().stream()
+                .filter(s -> !s.isDeleted())
+                .filter(s -> s.getSugarPercent() >= minSugar && s.getSugarPercent() <= maxSugar)
+                .toList();
+    }
+    public static List<Sweet> searchBySugar(List<Sweet> source, double min, double max) {
+        List<Sweet> res = new ArrayList<>();
+        for (Sweet s : source) {
+            if (s == null || s.isDeleted()) continue;
+            double sp = s.getSugarPercent();
+            if (sp >= min && sp <= max) {
+                res.add(s);
+            }
+        }
+        return res;
+    }
+
+    public static List<Sweet> searchByManufacturer(List<Sweet> source, String manufacturer) {
+        String q = manufacturer.trim().toLowerCase();
+        List<Sweet> res = new ArrayList<>();
+        for (int i = 0; i < source.size(); i++) {
+            Sweet s = source.get(i);
+            if (s == null || s.isDeleted()) continue;
+            if (s.getManufacturer() != null &&
+                    s.getManufacturer().toLowerCase().contains(q)) {
+                res.add(s);
+            }
+        }
+        return res;
+    }
+
+    public static List<Sweet> searchByCity(List<Sweet> source, String city) {
+        String q = city.trim().toLowerCase();
+        List<Sweet> res = new ArrayList<>();
+        for (Sweet s : source) {
+            if (s == null || s.isDeleted()) continue;
+            if (s.getCity() != null &&
+                    s.getCity().toLowerCase().contains(q)) {
+                res.add(s);
+            }
+        }
+        return res;
+    }
+
+    public  static List<Sweet> searchById(List<Sweet> source, int id) {
+        List<Sweet> res = new ArrayList<>();
+        for (Sweet s : source) {
+            if (s == null || s.isDeleted()) continue;
+            if (s.getId() != null && s.getId() == id) {
+                res.add(s);
+                break; // ID у нас унікальний
+            }
+        }
+        return res;
     }
 }

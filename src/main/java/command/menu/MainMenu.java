@@ -29,7 +29,7 @@ public class MainMenu extends AbstractMenu {
         items.add(new SetCurrentGiftCommand(giftService, in));
         items.add(new OpenMenuCommand(
                 "Поточний подарунок",
-                () -> new CurrentGiftMenu(giftService, in),
+                () -> new CurrentGiftMenu(giftService, sweetService, in),
                 in
         ));
 

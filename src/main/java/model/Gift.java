@@ -67,6 +67,10 @@ public class Gift {
             this.deleted = deleted;
             return this;
         }
+        public Builder clearSweetIds() {
+            this.sweetIds.clear();
+            return this;
+        }
 
 
         public Gift build() {

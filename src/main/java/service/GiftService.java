@@ -5,7 +5,9 @@ import repository.GiftRepository;
 import model.Sweet;
 import java.util.List;
 import java.util.ArrayList;
-
+import model.SortKey;
+import model.SortOrder;
+import model.SweetCategory;
 
 public class GiftService {
 
@@ -175,37 +177,45 @@ public class GiftService {
         Gift gift = getCurrentGift();
         if (gift == null) return -1;
 
-        List<Integer> ids = new ArrayList<>(gift.getSweetIds());
+        List<Integer> ids = gift.getSweetIds();
+        List<Integer> newIds = new ArrayList<>();
+
         int removed = 0;
 
         for (Integer sweetId : ids) {
             Sweet s = sweetService.findById(sweetId);
-            if (s != null && !s.isDeleted() && s.isExpired()) { // isExpired() ти ще доробиш у Sweet
-                removed++;
+
+            if (s == null || s.isDeleted()) {
+                // якщо не існує або видалений у складі — пропускаємо, але не рахуємо як "прострочений"
+                continue;
+            }
+
+            if (s.isExpired()) {
+                removed++;      // рахуємо прострочені
+            } else {
+                newIds.add(sweetId);  // залишаємо свіжі
             }
         }
 
-        if (removed == 0) return 0;
+        if (removed == 0) {
+            return 0;
+        }
 
-        // будуємо новий список ID без прострочених
+        // будуємо подарунок із новим списком ID
         Gift updated = gift.toBuilder()
-                .addAllSweetIds(
-                        ids.stream()
-                                .filter(id -> {
-                                    Sweet s = sweetService.findById(id);
-                                    return s == null || s.isDeleted() || !s.isExpired();
-                                })
-                                .toList()
-                )
+                .clearSweetIds()
+                .addAllSweetIds(newIds)
                 .build();
 
         giftRepository.update(updated);
         return removed;
     }
+
     public void saveLoadedGift(Gift gift) {
         giftRepository.save(gift);
     }
     public List<Gift> getAllIncludingDeleted() {
         return giftRepository.findAll();
     }
+
 }

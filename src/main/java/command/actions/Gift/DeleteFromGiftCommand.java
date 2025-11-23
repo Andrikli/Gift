@@ -1,7 +1,10 @@
 package command.actions.Gift;
 import command.Command;
+import model.Sweet;
 import service.GiftService;
+import util.SweetUtils;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class DeleteFromGiftCommand implements Command {
@@ -26,6 +29,17 @@ public class DeleteFromGiftCommand implements Command {
             return;
         }
 
+        List<Sweet> sweets = giftService.getGiftSweets();
+        if (sweets.isEmpty()) {
+            System.out.println("У подарунку немає солодощів.");
+            return;
+        }
+
+        System.out.println(" Список солодощів");
+        for (Sweet s : sweets) {
+            System.out.println(SweetUtils.format(s));
+            System.out.println();
+        }
         System.out.println("Введіть ID солодощів для видалення з подарунка:");
         String line = in.nextLine().trim();
         int sweetId;
