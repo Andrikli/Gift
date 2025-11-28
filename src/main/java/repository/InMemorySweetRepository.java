@@ -14,13 +14,19 @@ public class InMemorySweetRepository implements SweetRepository {
 
     @Override
     public Sweet save(Sweet sweet) {
-        // якщо в об'єкта вже є id — нехай собі буде, не перестворюємо
+        // якщо в об'єкта вже є id (наприклад, завантажили з файлу) —
+        // просто додаємо його і піднімаємо лічильник nextId, щоб не було дубляжів
         if (sweet.getId() != null) {
-            // можна тут зробити update, але давай поки що просто додаємо як є
             sweets.add(sweet);
+
+            // щоб наступні згенеровані id були більші за всі існуючі
+            if (sweet.getId() >= nextId) {
+                nextId = sweet.getId() + 1;
+            }
             return sweet;
         }
 
+        // якщо id немає — генеруємо новий
         int id = nextId++;
 
         Sweet withId = sweet.toBuilder()
@@ -30,6 +36,7 @@ public class InMemorySweetRepository implements SweetRepository {
         sweets.add(withId);
         return withId;
     }
+
 
     @Override
     public List<Sweet> findAll() {

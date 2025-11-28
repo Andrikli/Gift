@@ -15,15 +15,25 @@ public class InMemoryGiftRepository implements GiftRepository {
     }
     @Override
     public Gift save(Gift gift) {
-        if(gift.getId()!=0){
+        // Якщо id вже заданий (з файлу) — додаємо і оновлюємо nextId
+        if (gift.getId() != 0) { // 0 у тебе грає роль "немає id"
             gifts.add(gift);
+
+            if (gift.getId() >= nextId) {
+                nextId = gift.getId() + 1;
+            }
             return gift;
         }
-        Gift withId = gift.toBuilder().id(nextId++).build();
+
+        // Якщо id немає — генеруємо новий
+        Gift withId = gift.toBuilder()
+                .id(nextId++)
+                .build();
+
         gifts.add(withId);
         return withId;
-
     }
+
     @Override
     public Gift findById(int id) {
         for(Gift gift : gifts){
