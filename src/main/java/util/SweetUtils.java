@@ -24,7 +24,7 @@ public class SweetUtils {
                 .append(", виробник=").append(s.getManufacturer())
                 .append(", місто=").append(s.getCity());
 
-        // Додаткові поля залежно від типу
+
         if (s instanceof Cookie ck) {
             sb.append(", тип муки=").append(ck.getFlourType());
         }
