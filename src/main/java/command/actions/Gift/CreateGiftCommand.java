@@ -3,8 +3,12 @@ import service.GiftService;
 
 import java.util.Scanner;
 import command.Command;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CreateGiftCommand implements Command {
+    private static final Logger logger = LogManager.getLogger(CreateGiftCommand.class);
+
     private final GiftService giftService;
     private final Scanner in;
 
@@ -24,10 +28,13 @@ public class CreateGiftCommand implements Command {
 
         try {
             var gift = giftService.createGift(title);
+            logger.info("Користувач створив подарунок title='{}', id={}", title, gift.getId());
             System.out.println(" Подарунок створено. ID = " + gift.getId());
         } catch (IllegalArgumentException e) {
+            logger.warn("Користувач ввів некоректну назву подарунка ('{}')", title);
             System.out.println("Помилка: " + e.getMessage());
         }
     }
+
 }
 

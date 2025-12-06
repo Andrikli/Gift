@@ -5,11 +5,12 @@ import repository.GiftRepository;
 import model.Sweet;
 import java.util.List;
 import java.util.ArrayList;
-import model.SortKey;
-import model.SortOrder;
-import model.SweetCategory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GiftService {
+    private static final Logger logger = LogManager.getLogger(GiftService.class);
 
     private final GiftRepository giftRepository;
     private final SweetService sweetService;
@@ -21,7 +22,10 @@ public class GiftService {
     }
     public Gift createGift(String title){
         Gift gift= Gift.builder().title(title).build();
-        return giftRepository.save(gift);
+        Gift saved = giftRepository.save(gift);
+        logger.info("Створено подарунок: id={}, title='{}'", saved.getId(), saved.getTitle());
+        return saved;
+
     }
     public List<Gift> getAll(){
         return giftRepository.findAll().stream().filter(g -> !g.isDeleted()).toList();
@@ -29,13 +33,14 @@ public class GiftService {
     public Gift findById(int id){
         return giftRepository.findById(id);
     }
-    //Поточний подарунок
     public boolean setCurrentGiftId(int currentId){
         Gift gift = giftRepository.findById(currentId);
         if(gift==null||gift.isDeleted()){
+            logger.warn("Не можна встановити поточний подарунок: id={}(не існує або видалений)", currentId);
             return false;
         }
         currentGiftId = currentId;
+        logger.info("Поточний подарунок встановлено: id={}", currentGiftId);
         return true;
     }
     public Gift getCurrentGift(){
@@ -44,39 +49,49 @@ public class GiftService {
         }
         Gift gift = giftRepository.findById(currentGiftId);
         if(gift==null||gift.isDeleted()){
+            logger.error("Поточний подарунок id={} не існує або видалений — скинуто", currentGiftId);
             currentGiftId = null;
             return null;
         }
         return giftRepository.findById(currentGiftId);
     }
     public void clearCurrentGift(){
+        if (currentGiftId != null) {
+            logger.info("Поточний подарунок скинуто (id={})", currentGiftId);
+        }
         currentGiftId = null;
     }
 
 
-    //Робота з подарунком
-
     public boolean addSweetToGift(int sweetId) {
         Gift gift = getCurrentGift();
         if (gift == null) {
+            logger.warn("Спроба додати солодощі без поточного подарунка");
             return false;
         }
         Sweet sweet = sweetService.findById(sweetId);
         if (sweet == null|| sweet.isDeleted()) {
+            logger.warn("Спроба додати неіснуючі/видалені солодощі id={}", sweetId);
             return false;
         }
-        Gift updated = gift.toBuilder().addSweetId(sweetId).build();
-        return giftRepository.update(updated);
+        boolean ok = giftRepository.update(gift.toBuilder().addSweetId(sweetId).build());
+        if (ok) logger.info("Солодощі id={} додано до подарунка id={}", sweetId, gift.getId());
+        else logger.error("Помилка при оновленні подарунка id={} (додавання солодощів)", gift.getId());
+
+        return ok;
     }
 
     public boolean RemoveFromGift(int sweetId){
         Gift gift = getCurrentGift();
         if (gift == null) {
+            logger.warn("Спроба видалити солодощі без поточного подарунка");
             return false;
         }
-        Gift updated = gift.toBuilder().removeSweetId(sweetId).build();
-        return giftRepository.update(updated);
+        boolean ok = giftRepository.update(gift.toBuilder().removeSweetId(sweetId).build());
+        if (ok) logger.info("Солодощі id={} видалено з подарунка id={}", sweetId, gift.getId());
+        else logger.error("Помилка при оновленні подарунка id={} (видалення солодощів)", gift.getId());
 
+        return ok;
     }
     public List<Sweet> getGiftSweets(){
         Gift gift = getCurrentGift();
@@ -109,32 +124,33 @@ public class GiftService {
     public boolean deleteById(int id) {
         Gift g = giftRepository.findById(id);
         if (g == null || g.isDeleted()) {
-            return false; // нема або вже видалений
+            logger.warn("Спроба видалити неіснуючий подарунок id={}", id);
+            return false;
         }
 
-        Gift deletedGift = g.toBuilder()
-                .deleted(true)
-                .build();
-
-        boolean ok = giftRepository.update(deletedGift);
-
-        if (ok && currentGiftId != null && currentGiftId == id) {
-            currentGiftId = null; // якщо видалили поточний
+        boolean ok = giftRepository.update(g.toBuilder().deleted(true).build());
+        if (ok) {
+            logger.info("Подарунок id={} видалено", id);
+            if (currentGiftId != null && currentGiftId.equals(id)) {
+                currentGiftId = null;
+                logger.info("Поточний подарунок скинуто (було id={})", id);
+            }
+        } else {
+            logger.error("Не вдалося видалити подарунок id={}", id);
         }
-
         return ok;
     }
     public boolean restoreById(int id) {
         Gift g = giftRepository.findById(id);
         if (g == null || !g.isDeleted()) {
-            return false; // нема або не був видалений
+            logger.warn("Спроба відновити подарунок id={} який не видалений або не існує", id);
+            return false;
         }
+        boolean ok = giftRepository.update(g.toBuilder().deleted(false).build());
+        if (ok) logger.info("Подарунок id={} відновлено", id);
+        else logger.error("Не вдалося відновити подарунок id={}", id);
 
-        Gift restored = g.toBuilder()
-                .deleted(false)
-                .build();
-
-        return giftRepository.update(restored);
+        return ok;
     }
     public int deleteAll() {
         int count = 0;
@@ -213,6 +229,7 @@ public class GiftService {
 
     public void saveLoadedGift(Gift gift) {
         giftRepository.save(gift);
+        logger.info("Подарунок '{}' завантажено з файлу", gift.getTitle());
     }
     public List<Gift> getAllIncludingDeleted() {
         return giftRepository.findAll();

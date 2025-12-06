@@ -4,11 +4,15 @@ import command.Command;
 import model.Sweet;
 import service.SweetService;
 import util.SweetUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class SearchInStockCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(SearchInStockCommand.class);
 
     private final SweetService sweetService;
     private final Scanner in;
@@ -25,18 +29,22 @@ public class SearchInStockCommand implements Command {
 
     @Override
     public void execute() {
-        List<Sweet> source = sweetService.getAll(); // вже без deleted
+        List<Sweet> source = sweetService.getAll();
         if (source.isEmpty()) {
             System.out.println("Склад порожній.");
             return;
         }
+
 
         switch (askMode()) {
             case "1" -> searchById(source);
             case "2" -> searchByManufacturer(source);
             case "3" -> searchByCity(source);
             case "4" -> searchBySugar(source);
-            default -> System.out.println("Невідомий режим пошуку.");
+            default -> {
+                logger.warn("Користувач вибрав невідомий режим пошуку");
+                System.out.println("Невідомий режим пошуку.");
+            }
         }
     }
 
@@ -52,6 +60,7 @@ public class SearchInStockCommand implements Command {
 
     private void printResults(List<Sweet> list) {
         if (list.isEmpty()) {
+
             System.out.println("Нічого не знайдено.");
             return;
         }
@@ -70,6 +79,7 @@ public class SearchInStockCommand implements Command {
             List<Sweet> res = SweetService.searchById(source, id);
             printResults(res);
         } catch (NumberFormatException e) {
+            logger.warn("Некоректний ввід ID при пошуку: '{}'", line);
             System.out.println("ID має бути цілим числом.");
         }
     }
@@ -77,6 +87,7 @@ public class SearchInStockCommand implements Command {
     private void searchByManufacturer(List<Sweet> source) {
         System.out.print("Введіть частину назви виробника: ");
         String man = in.nextLine();
+
         List<Sweet> res = SweetService.searchByManufacturer(source, man);
         printResults(res);
     }
@@ -84,6 +95,7 @@ public class SearchInStockCommand implements Command {
     private void searchByCity(List<Sweet> source) {
         System.out.print("Введіть частину назви міста: ");
         String city = in.nextLine();
+
         List<Sweet> res = SweetService.searchByCity(source, city);
         printResults(res);
     }
@@ -94,9 +106,11 @@ public class SearchInStockCommand implements Command {
             double min = Double.parseDouble(in.nextLine().trim());
             System.out.print("Максимальний % цукру: ");
             double max = Double.parseDouble(in.nextLine().trim());
+
             List<Sweet> res = SweetService.searchBySugar(source, min, max);
             printResults(res);
         } catch (NumberFormatException e) {
+            logger.warn("Некоректний ввід чисел при пошуку за цукром");
             System.out.println("Потрібно вводити числа.");
         }
     }

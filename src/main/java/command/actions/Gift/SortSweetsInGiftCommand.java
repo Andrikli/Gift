@@ -8,11 +8,16 @@ import service.SweetSort;
 import model.SortKey;
 import model.SortOrder;
 import util.SweetUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class SortSweetsInGiftCommand implements Command {
+
+    private static final Logger logger = LogManager.getLogger(SortSweetsInGiftCommand.class);
+
     private final GiftService giftService;
     private final Scanner in;
 
@@ -29,12 +34,14 @@ public class SortSweetsInGiftCommand implements Command {
     @Override
     public void execute() {
         if (giftService.getCurrentGift() == null) {
+            logger.warn("Спроба сортувати без вибраного подарунка");
             System.out.println("Поточний подарунок не обраний.");
             return;
         }
 
         List<Sweet> source = giftService.getGiftSweets();
         if (source.isEmpty()) {
+            logger.info("Спроба сортувати, але в подарунку немає солодощів");
             System.out.println("У подарунку немає солодощів.");
             return;
         }
@@ -43,13 +50,16 @@ public class SortSweetsInGiftCommand implements Command {
         SortKey key = askSortKey(filterCategory);
         SortOrder order = askOrder();
 
+        logger.info("Користувач сортує солодощі в подарунку: category={}, key={}, order={}",
+                filterCategory, key, order);
+
         List<Sweet> sorted = SweetSort.sort(source, key, order, filterCategory);
 
         System.out.println("=== Відсортовані солодощі в подарунку ===");
-        for (Sweet s : sorted) {
+        sorted.forEach(s -> {
             System.out.println(SweetUtils.format(s));
             System.out.println();
-        }
+        });
     }
 
     private SweetCategory askCategory() {

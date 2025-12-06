@@ -8,7 +8,6 @@ import service.SweetService;
 import service.GiftService;
 
 
-
 public class Main {
     public static void main(String[] args) {
         SweetRepository sweetRepository = new InMemorySweetRepository();
@@ -19,6 +18,7 @@ public class Main {
 
         MainMenu mainMenu = new MainMenu(sweetService, giftService);
         mainMenu.show();
+
 
         System.out.println("Вихід з програми");
     }

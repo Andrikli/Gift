@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Appenders>
+
+        <!-- 1) Лог у консоль (для відладки) -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] %-5level [%t] %c - %msg%n"/>
+        </Console>
+
+        <!-- 2) Лог у файл (rolling) -->
+        <RollingFile name="File"
+                     fileName="logs/app.log"
+                     filePattern="logs/app-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%t] %c - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <SMTP name="MailAppender"
+              subject="CRITICAL ERROR in Gift App"
+              to="andilkiv15@gmail.com"
+              from="andilkiv15@gmail.com"
+              smtpHost="smtp.gmail.com"
+              smtpPort="465"
+              smtpProtocol="smtps"
+              smtpUsername="andilkiv15@gmail.com"
+              smtpPassword="wdxkkktcntpikgtj"
+              bufferSize="1">
+
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %c - %msg%n"/>
+
+            <!-- тільки ERROR і вище -->
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+
+            <!-- ВАЖЛИВО: властивості SMTP для TLS -->
+            <Property name="mail.smtp.auth">true</Property>
+            <Property name="mail.smtp.starttls.enable">true</Property>
+            <Property name="mail.smtp.ssl.protocols">TLSv1.2</Property>
+            <Property name="mail.smtp.ssl.enable">false</Property>
+
+        </SMTP>
+
+    </Appenders>
+
+    <Loggers>
+
+        <!-- Логіка сервісів -->
+        <Logger name="service" level="DEBUG" additivity="false">
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="MailAppender"/>
+        </Logger>
+
+        <!-- Логіка моделей -->
+        <Logger name="model" level="DEBUG" additivity="false">
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+        <!-- Рутовий логер для всього проєкту -->
+        <Root level="INFO">
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="MailAppender"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>

@@ -54,7 +54,6 @@ class GiftServiceTest {
         assertNull(giftService.getCurrentGift());
     }
 
-    // 2. Робота зі складом подарунка (Додавання, Видалення)
     @Test
     void sweets_AddRemove() {
         Gift gift = Gift.builder().id(1).title("G").addAllSweetIds(new ArrayList<>()).build();
